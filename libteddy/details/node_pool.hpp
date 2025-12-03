@@ -94,7 +94,7 @@ node_pool<Data, Degree>::node_pool(
 
 template<class Data, class Degree>
 node_pool<Data, Degree>::node_pool(node_pool&& other) noexcept :
-    pools_(utils::exchange(other.mainPool_, nullptr)),
+    pools_(utils::exchange(other.pools_, nullptr)),
     nextPoolNode_(utils::exchange(other.nextPoolNode_, nullptr)),
     freeNodes_(utils::exchange(other.freeNodes_, nullptr)),
     mainPoolSize_(utils::exchange(other.mainPoolSize_, -1)),
