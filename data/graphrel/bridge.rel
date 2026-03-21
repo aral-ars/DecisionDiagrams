@@ -1,0 +1,23 @@
+c Wu & Sun (2024) bridge network, Figure 1
+c
+c Topology:
+c        v1(1)
+c       /  |  \
+c     e0   e2  e3
+c     /    |    \
+c  v0(0)        v3(3)   <- terminals
+c     \    |    /
+c     e1        e4
+c       \  |  /
+c        v2(2)
+c
+c All components (vertices and edges) have reliability p = 0.9.
+c Expected 2-terminal reliability (v0 to v3): 0.760078728
+c Reference: Wu & Sun (2024), Table 2
+p reliability 4 5 0.9 0.9
+t 0 3
+e 0 1
+e 0 2
+e 1 2
+e 1 3
+e 2 3

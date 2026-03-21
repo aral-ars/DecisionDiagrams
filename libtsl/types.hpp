@@ -1,6 +1,7 @@
 #ifndef LIBTEDDY_TSL_TYPES_HPP
 #define LIBTEDDY_TSL_TYPES_HPP
 
+#include <cstddef>
 #include <cstdint>
 
 namespace teddy::tsl

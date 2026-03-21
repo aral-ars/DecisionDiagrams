@@ -121,6 +121,18 @@ public:
     auto variable_not (int32 index) -> utils::second_t<Foo, diagram_t>;
 
     /**
+     *  \brief Creates BDD node: if variable then high else low
+     *  \param index Index of the variable
+     *  \param high Diagram for variable = 1
+     *  \param low  Diagram for variable = 0
+     *  \return ITE diagram node (reduced via unique table)
+     */
+    template<class Foo = void>
+    requires(is_bdd<Degree>)
+    auto make_ite (int32 index, diagram_t const& high, diagram_t const& low)
+        -> utils::second_t<Foo, diagram_t>;
+
+    /**
      *  \brief Creates diagram representing function of single variable
      *  \param i Index of the variable
      *  \return Diagram of a function of single variable
@@ -866,6 +878,21 @@ auto diagram_manager<Data, Degree, Domain>::variable_not(int32 const index)
 }
 
 template<class Data, class Degree, class Domain>
+template<class Foo>
+requires(is_bdd<Degree>)
+auto diagram_manager<Data, Degree, Domain>::make_ite(
+    int32 const index,
+    diagram_t const& high,
+    diagram_t const& low
+) -> utils::second_t<Foo, diagram_t>
+{
+    son_container sons = nodes_.make_son_container(2);
+    sons[0]            = low.unsafe_get_root();
+    sons[1]            = high.unsafe_get_root();
+    return diagram_t(nodes_.make_internal_node(index, sons));
+}
+
+template<class Data, class Degree, class Domain>
 auto diagram_manager<Data, Degree, Domain>::operator() (int32 const index)
     -> diagram_t
 {
@@ -963,7 +990,7 @@ auto diagram_manager<Data, Degree, Domain>::from_vector(I first, S last)
             for (int32 k = 0; k < newDomain; ++k)
             {
                 newSons[k]
-                    = stack[as_uindex(ssize(stack) - newDomain + k)].node;
+                    = stack[as_uindex(static_cast<int64>(ssize(stack)) - newDomain + k)].node;
             }
             node_t* const newNode
                 = nodes_.make_internal_node(newIndex, newSons);

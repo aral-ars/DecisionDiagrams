@@ -32,6 +32,24 @@ target_link_options(
     n-queens PRIVATE ${LIBTEDDY_LINK_OPTIONS}
 )
 
+if(LIBTEDDY_BUILD_GRAPHREL)
+    add_executable(
+        graphrel-example graphrel.cpp
+    )
+
+    target_link_libraries(
+        graphrel-example PRIVATE teddy::graphrel
+    )
+
+    target_compile_options(
+        graphrel-example PRIVATE ${LIBTEDDY_COMPILE_OPTIONS}
+    )
+
+    target_link_options(
+        graphrel-example PRIVATE ${LIBTEDDY_LINK_OPTIONS}
+    )
+endif()
+
 if(LIBTEDDY_SYMBOLIC_RELIABILITY)
     # Time reliability
     add_executable(

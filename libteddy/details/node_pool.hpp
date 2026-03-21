@@ -206,6 +206,7 @@ auto node_pool<Data, Degree>::deallocate_pool(
     node_t* const lastNode
 ) -> pool_item*
 {
+    if (!pool) return nullptr;
     node_t* node = pool->pool_;
     while (node < lastNode)
     {

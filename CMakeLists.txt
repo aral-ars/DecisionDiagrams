@@ -145,6 +145,7 @@ option(LIBTEDDY_USE_MOLD          "Use Mold linker"       OFF)
 option(LIBTEDDY_BUILD_TESTS       "Build tests"           OFF)
 option(LIBTEDDY_BUILD_EXAMPLES    "Build examples"        OFF)
 option(LIBTEDDY_BUILD_EXPERIMENTS "Build experiments"     OFF)
+option(LIBTEDDY_BUILD_GRAPHREL    "Build graphrel"        OFF)
 
 ## Common compile and link options for subprojects
 string(
@@ -229,4 +230,8 @@ endif()
 
 if(LIBTEDDY_BUILD_EXPERIMENTS)
     add_subdirectory(experiments)
+endif()
+
+if(LIBTEDDY_BUILD_GRAPHREL)
+    add_subdirectory(libgraphrel)
 endif()
