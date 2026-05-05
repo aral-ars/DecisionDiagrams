@@ -21,7 +21,7 @@
 namespace teddy::graphrel {
 
 decomp_state::decomp_state(const graph &net, const std::vector<std::size_t> &K)
-    : union_find(net.num_vertices) {
+    : uf_(net.num_vertices) {
   /**
    * @brief Construct initial subgraph state from network
    *
@@ -45,7 +45,7 @@ decomp_state::decomp_state(const graph &net, const std::vector<std::size_t> &K)
 decomp_state decomp_state::clone() const {
   decomp_state copy;
   copy.remaining_edges = this->remaining_edges;
-  copy.union_find = this->union_find;
+  copy.uf_ = this->uf_;
   copy.current_K = this->current_K;
   copy.is_valid = this->is_valid;
   return copy;
@@ -70,9 +70,9 @@ bool decomp_state::is_success_terminal() const {
   }
 
   // Check if all terminals share the same Union-Find root
-  std::size_t first_root = union_find.find_root(*current_K.begin());
+  std::size_t first_root = uf_.find_root(*current_K.begin());
   for (std::size_t terminal : current_K) {
-    if (union_find.find_root(terminal) != first_root) {
+    if (uf_.find_root(terminal) != first_root) {
       return false; // Terminals in different components
     }
   }
@@ -122,7 +122,7 @@ bool decomp_state::is_failure_terminal(const graph &net,
   // processed OPTIMIZATION: Copy existing union_find instead of rebuilding from
   // scratch This avoids O(n) unite operations and leverages existing
   // connectivity structure
-  teddy::graphrel::union_find uf_check = union_find; // Copy existing state (fast vector copy)
+  teddy::graphrel::union_find uf_check = uf_; // Copy existing state (fast vector copy)
 
   // Step 1: Merge vertices based on remaining edges (future connectivity)
   // This captures potential connectivity from edges not yet processed
@@ -149,7 +149,7 @@ bool decomp_state::is_failure_terminal(const graph &net,
 }
 
 teddy::graphrel::union_find decomp_state::build_full_connectivity(const graph &net) const {
-  teddy::graphrel::union_find uf_full = union_find; // Copy existing state
+  teddy::graphrel::union_find uf_full = uf_; // Copy existing state
   for (std::size_t edge_id : remaining_edges) {
     const auto &edge = net.edges[edge_id];
     uf_full.unite(edge.from, edge.to);
@@ -172,7 +172,7 @@ bool decomp_state::is_failure_terminal_with(const teddy::graphrel::union_find &f
 
 bool decomp_state::operator==(const decomp_state &other) const {
   return remaining_edges == other.remaining_edges &&
-         union_find == other.union_find && current_K == other.current_K &&
+         uf_ == other.uf_ && current_K == other.current_K &&
          is_valid == other.is_valid;
 }
 
@@ -192,16 +192,16 @@ std::string decomp_state::to_string(const graph &net) const {
   // Union-Find components for boundary vertices
   oss << "  union_find_components={";
   bool first = true;
-  for (std::size_t v = 0; v < union_find.size(); ++v) {
-    std::size_t root = union_find.find_root(v);
+  for (std::size_t v = 0; v < uf_.size(); ++v) {
+    std::size_t root = uf_.find_root(v);
     if (root == v) { // Only print roots
       if (!first)
         oss << ",";
       first = false;
       oss << "v" << v << ":{";
       bool first_child = true;
-      for (std::size_t u = 0; u < union_find.size(); ++u) {
-        if (union_find.find_root(u) == v) {
+      for (std::size_t u = 0; u < uf_.size(); ++u) {
+        if (uf_.find_root(u) == v) {
           if (!first_child)
             oss << ",";
           first_child = false;
@@ -238,7 +238,7 @@ std::string decomp_state::to_string(const graph &net) const {
     if (!first_bv)
       oss << ",";
     first_bv = false;
-    std::size_t root = union_find.find_root(v);
+    std::size_t root = uf_.find_root(v);
     oss << "v" << v << "->" << root;
   }
   oss << "}\n";

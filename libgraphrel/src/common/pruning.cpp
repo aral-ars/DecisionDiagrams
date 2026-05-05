@@ -31,13 +31,13 @@ void prune_unreachable_edges(decomp_state &state, const graph &net) {
     std::fill(comp_degree.begin(), comp_degree.end(), 0);
 
     for (std::size_t t : terminals) {
-      comp_has_terminal[state.union_find.find_root(t)] = true;
+      comp_has_terminal[state.uf_.find_root(t)] = true;
     }
 
     for (std::size_t edge_id : state.remaining_edges) {
       const auto &e = net.edges[edge_id];
-      std::size_t r1 = state.union_find.find_root(e.from);
-      std::size_t r2 = state.union_find.find_root(e.to);
+      std::size_t r1 = state.uf_.find_root(e.from);
+      std::size_t r2 = state.uf_.find_root(e.to);
       comp_degree[r1]++;
       if (r1 != r2) {
         comp_degree[r2]++;
@@ -51,8 +51,8 @@ void prune_unreachable_edges(decomp_state &state, const graph &net) {
     std::vector<std::size_t> edges_to_prune;
     for (std::size_t edge_id : state.remaining_edges) {
       const auto &e = net.edges[edge_id];
-      std::size_t r1 = state.union_find.find_root(e.from);
-      std::size_t r2 = state.union_find.find_root(e.to);
+      std::size_t r1 = state.uf_.find_root(e.from);
+      std::size_t r2 = state.uf_.find_root(e.to);
 
       if (is_dead_component(r1) || is_dead_component(r2)) {
         edges_to_prune.push_back(edge_id);

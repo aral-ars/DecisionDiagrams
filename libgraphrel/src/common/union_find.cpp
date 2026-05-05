@@ -13,6 +13,7 @@
 #include "common/union_find.hpp"
 #include <algorithm>
 #include <stdexcept>
+#include <string>
 
 namespace teddy::graphrel {
 

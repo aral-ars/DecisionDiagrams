@@ -41,7 +41,7 @@ boundary_partition boundary_computer::compute(const decomp_state& sg,
                                               std::size_t level,
                                               const bell_cache& cache) const {
     std::vector<std::size_t> boundary = identify_vertices(sg, level);
-    return canonicalize_partition(boundary, sg.union_find, sg.current_K, cache);
+    return canonicalize_partition(boundary, sg.uf_, sg.current_K, cache);
 }
 
 void boundary_computer::precompute() {

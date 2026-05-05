@@ -33,7 +33,7 @@ decomp_state contract_edge(const decomp_state &sg, std::size_t edge_id,
     std::size_t u = e.from;
     std::size_t v = e.to;
 
-    result.union_find.unite(u, v);
+    result.uf_.unite(u, v);
 
     auto it = std::lower_bound(result.remaining_edges.begin(),
                                result.remaining_edges.end(), edge_id);
@@ -47,7 +47,7 @@ decomp_state contract_edge(const decomp_state &sg, std::size_t edge_id,
     bool v_in_K = (v_it != result.current_K.end());
 
     if (u_in_K && v_in_K) {
-        std::size_t rep = result.union_find.find(u);
+        std::size_t rep = result.uf_.find(u);
         result.current_K.erase(u_it);
         v_it = std::find(result.current_K.begin(), result.current_K.end(), v);
         if (v_it != result.current_K.end()) {
@@ -59,7 +59,7 @@ decomp_state contract_edge(const decomp_state &sg, std::size_t edge_id,
             result.current_K.insert(rep_it, rep);
         }
     } else if (v_in_K) {
-        std::size_t rep = result.union_find.find(u);
+        std::size_t rep = result.uf_.find(u);
         result.current_K.erase(v_it);
         auto rep_it = std::lower_bound(result.current_K.begin(),
                                        result.current_K.end(), rep);
@@ -67,7 +67,7 @@ decomp_state contract_edge(const decomp_state &sg, std::size_t edge_id,
             result.current_K.insert(rep_it, rep);
         }
     } else if (u_in_K) {
-        std::size_t rep = result.union_find.find(u);
+        std::size_t rep = result.uf_.find(u);
         if (rep != u) {
             result.current_K.erase(u_it);
             auto rep_it = std::lower_bound(result.current_K.begin(),
@@ -112,7 +112,7 @@ bool is_coloop(const decomp_state &sg, std::size_t edge_id, const graph &net) {
     std::size_t u = e.from;
     std::size_t v = e.to;
 
-    if (sg.union_find.connected_const(u, v)) {
+    if (sg.uf_.connected_const(u, v)) {
         return false;
     }
 
@@ -179,7 +179,7 @@ void contract_edge_in_place(decomp_state &sg, std::size_t edge_id,
     std::size_t u = e.from;
     std::size_t v = e.to;
 
-    sg.union_find.unite(u, v);
+    sg.uf_.unite(u, v);
 
     auto it = std::lower_bound(sg.remaining_edges.begin(),
                                sg.remaining_edges.end(), edge_id);
@@ -193,7 +193,7 @@ void contract_edge_in_place(decomp_state &sg, std::size_t edge_id,
     bool v_in_K = (v_it != sg.current_K.end());
 
     if (u_in_K && v_in_K) {
-        std::size_t rep = sg.union_find.find(u);
+        std::size_t rep = sg.uf_.find(u);
         sg.current_K.erase(u_it);
         v_it = std::find(sg.current_K.begin(), sg.current_K.end(), v);
         if (v_it != sg.current_K.end()) {
@@ -205,7 +205,7 @@ void contract_edge_in_place(decomp_state &sg, std::size_t edge_id,
             sg.current_K.insert(rep_it, rep);
         }
     } else if (v_in_K) {
-        std::size_t rep = sg.union_find.find(u);
+        std::size_t rep = sg.uf_.find(u);
         sg.current_K.erase(v_it);
         auto rep_it =
             std::lower_bound(sg.current_K.begin(), sg.current_K.end(), rep);
@@ -213,7 +213,7 @@ void contract_edge_in_place(decomp_state &sg, std::size_t edge_id,
             sg.current_K.insert(rep_it, rep);
         }
     } else if (u_in_K) {
-        std::size_t rep = sg.union_find.find(u);
+        std::size_t rep = sg.uf_.find(u);
         if (rep != u) {
             sg.current_K.erase(u_it);
             auto rep_it = std::lower_bound(sg.current_K.begin(),
@@ -249,7 +249,7 @@ void delete_vertex_in_place(decomp_state &sg, std::size_t vertex_id,
 
 bool is_loop(const decomp_state &sg, std::size_t edge_id, const graph &net) {
     const edge &e = net.edges[edge_id];
-    return sg.union_find.connected_const(e.from, e.to);
+    return sg.uf_.connected_const(e.from, e.to);
 }
 
 } // namespace teddy::graphrel

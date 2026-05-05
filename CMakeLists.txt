@@ -152,7 +152,6 @@ if(MSVC)
     string(
         JOIN ";" LIBTEDDY_COMPILE_OPTIONS
             "/W4"
-            "/WX"
             "/permissive-"
     )
 else()

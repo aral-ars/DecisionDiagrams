@@ -51,7 +51,7 @@ void lbl_calculator::process_variable(const decomp_state& sg, double parent_prob
         const auto& e = net_.edges[edge_id];
 
         // Redundant edge: endpoints already connected
-        if (sg.union_find.find_root(e.from) == sg.union_find.find_root(e.to)) {
+        if (sg.uf_.find_root(e.from) == sg.uf_.find_root(e.to)) {
             decomp_state* child = state_pool_.create(sg);
             contract_edge_in_place(*child, edge_id, net_);
             insert_or_merge(child, parent_prob, var_idx + 1);

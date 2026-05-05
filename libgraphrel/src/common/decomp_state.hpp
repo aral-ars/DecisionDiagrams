@@ -4,6 +4,7 @@
 #include "teddy/graphrel/graph.hpp"
 #include "common/union_find.hpp"
 #include <climits> // For SIZE_MAX
+#include <string>
 #include <vector>
 
 /**
@@ -27,7 +28,7 @@ struct decomp_state {
    * binary_search for ghost edge detection in reliability_calculator.cpp.
    */
   std::vector<std::size_t> remaining_edges;
-  union_find union_find;
+  union_find uf_;
   std::vector<std::size_t>
       current_K; // Sorted vector (replaces std::set for better cache locality)
   bool is_valid = true;
@@ -36,7 +37,7 @@ struct decomp_state {
   decomp_state *next_ = nullptr;
 
   // Default constructor for map creation
-  decomp_state() : union_find(0) {}
+  decomp_state() : uf_(0) {}
 
   /**
    * @brief Constructor for initial state

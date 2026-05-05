@@ -25,8 +25,8 @@ struct edge {
   std::size_t to;     ///< Target vertex (0-indexed)
   double prob; ///< Edge prob probability p_e[id]
 
-  edge(std::size_t id, std::size_t from, std::size_t to, double prob)
-      : id(id), from(from), to(to), prob(prob) {}
+  edge(std::size_t id_, std::size_t from_, std::size_t to_, double prob_)
+      : id(id_), from(from_), to(to_), prob(prob_) {}
 };
 
 /**

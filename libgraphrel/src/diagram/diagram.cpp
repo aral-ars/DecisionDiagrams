@@ -189,8 +189,8 @@ private:
         const auto& e = net_.edges[edge_id];
 
         // Redundant edge: endpoints already connected
-        if (state.union_find.find_root(e.from) ==
-            state.union_find.find_root(e.to)) {
+        if (state.uf_.find_root(e.from) ==
+            state.uf_.find_root(e.to)) {
             contract_edge_in_place(state, edge_id, net_);
             return build_recursive(std::move(state), var_idx + 1);
         }
