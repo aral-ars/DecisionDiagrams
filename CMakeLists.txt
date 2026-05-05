@@ -148,20 +148,26 @@ option(LIBTEDDY_BUILD_EXPERIMENTS "Build experiments"     OFF)
 option(LIBTEDDY_BUILD_GRAPHREL    "Build graphrel"        OFF)
 
 ## Common compile and link options for subprojects
-string(
-    JOIN ";" LIBTEDDY_COMPILE_OPTIONS
-        "-Wall"
-        "-Wextra"
-        "-Wpedantic"
-        "-Wconversion"
-        "-Wsign-conversion"
-        "-Wshadow"
-)
+if(MSVC)
+    string(
+        JOIN ";" LIBTEDDY_COMPILE_OPTIONS
+            "/W4"
+            "/WX"
+            "/permissive-"
+    )
+else()
+    string(
+        JOIN ";" LIBTEDDY_COMPILE_OPTIONS
+            "-Wall"
+            "-Wextra"
+            "-Wpedantic"
+            "-Wconversion"
+            "-Wsign-conversion"
+            "-Wshadow"
+    )
+endif()
 
-string(
-    JOIN ";" LIBTEDDY_LINK_OPTIONS
-        ""
-)
+set(LIBTEDDY_LINK_OPTIONS "")
 
 ## Use Mold linker if requested
 if(LIBTEDDY_USE_MOLD)
