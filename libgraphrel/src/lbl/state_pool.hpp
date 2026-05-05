@@ -6,6 +6,7 @@
 #include <cstdlib>
 #include <new>
 #include <stdexcept>
+#include <utility>
 
 namespace teddy::graphrel {
 
